@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/splash_navigation">
+    <fragment
+        android:id="@+id/splash_navigation"
+        android:name="com.sadpumpkin.farm2table.pregame.splash.SplashFragment"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_main_navigation_to_placeholder2"
+            app:destination="@id/game_navigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_main_navigation_to_placeholder3"
+            app:destination="@id/credits_navigation"
+            app:popUpTo="@id/splash_navigation"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/game_navigation"
+        android:name="com.sadpumpkin.farm2table.game.GameFragment"
+        tools:layout="@layout/fragment_game">
+        <action
+            android:id="@+id/action_game_navigation_to_splash_navigation"
+            app:destination="@id/splash_navigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/credits_navigation"
+        android:name="com.sadpumpkin.farm2table.pregame.credits.CreditsFragment"
+        tools:layout="@layout/fragment_credits">
+        <action
+            android:id="@+id/action_credits_navigation_to_splash_navigation"
+            app:destination="@id/splash_navigation"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+</navigation>

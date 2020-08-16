@@ -1,0 +1,3 @@
+[
+    { "id": "cons_stall_tiny", "name": "Tiny Stall", "duration": 1000, "cost": 250, "consumedIds": [], "valueMultiplier": 0.1 }
+]

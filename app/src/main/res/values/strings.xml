@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Farm 2 Table</string>
+    <string name="ad_id_banner">ca-app-pub-2244937989275260/7326829329</string>
+    <string name="ad_id_reward">ca-app-pub-2244937989275260/8764211685</string>
+    <string name="title_credits">Credits</string>
+    <string name="title_login">Login</string>
+    <string name="title_home">Home</string>
+    <string name="title_forage">Forage</string>
+    <string name="title_build">Build</string>
+    <string name="title_inventory">Inventory</string>
+    <string name="title_settings">Settings</string>
+    <string name="button_new_user">New User</string>
+    <string name="button_login">Login</string>
+    <string name="button_play">Play</string>
+    <string name="button_buy">Buy</string>
+    <string name="label_location">Location</string>
+    <string name="label_fertility">Fertility</string>
+    <string name="label_regrowth">Regrowth</string>
+    <string name="label_resources">Resources Available</string>
+    <string name="label_locating">Locating Resources</string>
+    <string name="label_the_void">The Void</string>
+    <string name="label_regrown_in">Regrown in %1$s seconds</string>
+    <string name="label_regrown_complete">Fully Regrown</string>
+    <string name="title_forage_error">Error</string>
+    <string name="body_forage_error">Unable to determine current forage state, please try again later or in a different location.</string>
+    <string name="button_forage_error">Okay</string>
+    <string name="title_forage_success">Success</string>
+    <string name="body_forage_success">Successfully foraged from this location: %1$s</string>
+    <string name="button_forage_success">Okay</string>
+    <string name="preference_high_accuracy_gps">Use High Accuracy GPS</string>
+    <string name="preference_high_accuracy_gps_summary">Determines both accuracy and update frequency.</string>
+    <string name="preference_sign_out">Sign Out</string>
+    <string name="preference_sign_out_summary">Sign out of your account and return to the splash screen.</string>
+    <string name="preference_account_category">Accounts</string>
+</resources>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/game_navigation"
+    app:startDestination="@id/home_navigation">
+
+    <fragment
+        android:id="@+id/home_navigation"
+        android:name="com.sadpumpkin.farm2table.game.home.HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home_navigation_to_forage_navigation"
+            app:destination="@id/forage_navigation"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_out_right"
+            app:popExitAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/forage_navigation"
+        android:name="com.sadpumpkin.farm2table.game.forage.ForageFragment"
+        tools:layout="@layout/fragment_forage">
+        <action
+            android:id="@+id/action_forage_navigation_to_build_navigation2"
+            app:destination="@id/build_navigation"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_out_right"
+            app:popExitAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_forage_navigation_to_home_navigation2"
+            app:destination="@id/home_navigation"
+            app:enterAnim="@android:anim/slide_out_right"
+            app:exitAnim="@android:anim/slide_in_left"
+            app:popEnterAnim="@android:anim/slide_out_right"
+            app:popExitAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/build_navigation"
+        android:name="com.sadpumpkin.farm2table.game.build.BuildFragment"
+        tools:layout="@layout/fragment_build">
+        <action
+            android:id="@+id/action_build_navigation_to_inventory_navigation"
+            app:destination="@id/inventory_navigation"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_out_right"
+            app:popExitAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_build_navigation_to_forage_navigation"
+            app:destination="@id/forage_navigation"
+            app:enterAnim="@android:anim/slide_out_right"
+            app:exitAnim="@android:anim/slide_in_left"
+            app:popEnterAnim="@android:anim/slide_out_right"
+            app:popExitAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/inventory_navigation"
+        android:name="com.sadpumpkin.farm2table.game.inventory.InventoryFragment"
+        tools:layout="@layout/fragment_inventory">
+        <action
+            android:id="@+id/action_inventory_navigation_to_settings_navigation2"
+            app:destination="@id/settings_navigation"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_out_right"
+            app:popExitAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_inventory_navigation_to_build_navigation2"
+            app:destination="@id/build_navigation"
+            app:enterAnim="@android:anim/slide_out_right"
+            app:exitAnim="@android:anim/slide_in_left"
+            app:popEnterAnim="@android:anim/slide_out_right"
+            app:popExitAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/settings_navigation"
+        android:name="com.sadpumpkin.farm2table.game.settings.SettingsFragment">
+        <action
+            android:id="@+id/action_settings_navigation_to_inventory_navigation2"
+            app:destination="@id/inventory_navigation"
+            app:enterAnim="@android:anim/slide_out_right"
+            app:exitAnim="@android:anim/slide_in_left"
+            app:popEnterAnim="@android:anim/slide_out_right"
+            app:popExitAnim="@android:anim/slide_in_left" />
+    </fragment>
+</navigation>

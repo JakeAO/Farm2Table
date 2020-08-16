@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "677721508977",
+    "firebase_url": "https://farm2table-c035e.firebaseio.com",
+    "project_id": "farm2table-c035e",
+    "storage_bucket": "farm2table-c035e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677721508977:android:2090fb3e258459334edfd0",
+        "android_client_info": {
+          "package_name": "com.sadpumpkin.farm2table"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677721508977-iofej6129h0fiiltokrnjh9poja9vj8e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCw_R1uVPEk9D5oZJsZ2Cxertgvuc_nj0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677721508977-iofej6129h0fiiltokrnjh9poja9vj8e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-2244937989275260~9666229815"
+    }
+  ],
+  "configuration_version": "1"
+}

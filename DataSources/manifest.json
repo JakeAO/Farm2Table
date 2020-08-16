@@ -1,0 +1,7 @@
+{
+    "seedManifest": "seeds.json",
+    "resourceManifest": "resources.json",
+    "producersManifest": "producers.json",
+    "convertersManifest": "converters.json",
+    "consumersManifest": "consumers.json"
+}
