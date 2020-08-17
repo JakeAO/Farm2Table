@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sadpumpkin.farm2table.R;
+import com.sadpumpkin.farm2table.util.FarmData;
 import com.sadpumpkin.farm2table.util.GameDataWrapper;
 import com.sadpumpkin.farm2table.util.callback.ICallback1;
 import com.sadpumpkin.farm2table.util.factory.definition.BaseBuildingDefinition;
@@ -21,15 +22,18 @@ public class BuildingAdapter extends RecyclerView.Adapter<BuildingViewHolder> {
     private static final int TYPE_ID_CONVERTER = 894;
     private static final int TYPE_ID_CONSUMER = 408;
 
+    private FarmData _farmData;
     private GameDataWrapper _gameData;
     private ICallback1<String> _attemptPurchaseConverter;
     private ICallback1<String> _attemptPurchaseConsumer;
 
     private ArrayList<BaseBuildingDefinition> _buildings;
 
-    public BuildingAdapter(GameDataWrapper gameDataWrapper,
+    public BuildingAdapter(FarmData farmData,
+                           GameDataWrapper gameDataWrapper,
                            ICallback1<String> attemptPurchaseConverter,
                            ICallback1<String> attemptPurchaseConsumer) {
+        _farmData = farmData;
         _gameData = gameDataWrapper;
         _attemptPurchaseConverter = attemptPurchaseConverter;
         _attemptPurchaseConsumer = attemptPurchaseConsumer;
@@ -53,12 +57,14 @@ public class BuildingAdapter extends RecyclerView.Adapter<BuildingViewHolder> {
             case TYPE_ID_CONVERTER:
                 holder.setData(
                         (ConverterDefinition) definition,
+                        _farmData,
                         _gameData,
                         () -> _attemptPurchaseConverter.onInvoke(definition.getId()));
                 break;
             case TYPE_ID_CONSUMER:
                 holder.setData(
                         (ConsumerDefinition) definition,
+                        _farmData,
                         _gameData,
                         () -> _attemptPurchaseConsumer.onInvoke(definition.getId()));
                 break;

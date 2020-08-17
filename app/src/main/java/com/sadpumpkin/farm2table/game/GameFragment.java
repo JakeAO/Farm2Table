@@ -18,6 +18,7 @@ import com.sadpumpkin.farm2table.R;
 import com.sadpumpkin.farm2table.util.BaseFragment;
 
 public class GameFragment extends BaseFragment {
+    private static final int TICK_FREQUENCY = 100;
 
     private AdView _bannerAdView = null;
 
@@ -29,6 +30,8 @@ public class GameFragment extends BaseFragment {
     private TextView _headerLabel = null;
 
     private TextView _coinsLabel = null;
+
+    private Thread _activeTickThread = null;
 
     @Nullable
     @Override
@@ -64,9 +67,33 @@ public class GameFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        // Start new Tick
+        _activeTickThread = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(TICK_FREQUENCY);
+                    _userData.farm().tick(TICK_FREQUENCY, _gameData);
+                } catch (InterruptedException ex) {
+                    break;
+                }
+            }
+        });
+        _activeTickThread.start();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
 
         _firebase.getUserDocRef(_userData.user()).set(_userData.farm());
+
+        // Clear old Tick
+        if (_activeTickThread != null) {
+            _activeTickThread.interrupt();
+            _activeTickThread = null;
+        }
     }
 }

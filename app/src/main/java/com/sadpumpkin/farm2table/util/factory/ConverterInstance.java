@@ -20,4 +20,9 @@ public class ConverterInstance extends BaseFactoryInstance {
     public ConverterInstance(String factoryType, Timestamp lastStart, Long count) {
         super(factoryType, lastStart, count);
     }
+
+    public ConverterInstance(ConverterDefinition definition){
+        super(definition.getId(), Timestamp.now(), 1L);
+        setDefinition(definition);
+    }
 }

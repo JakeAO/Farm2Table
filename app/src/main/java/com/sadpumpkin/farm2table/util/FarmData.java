@@ -8,6 +8,8 @@ import com.google.firebase.firestore.Exclude;
 import com.sadpumpkin.farm2table.util.factory.ConsumerInstance;
 import com.sadpumpkin.farm2table.util.factory.ConverterInstance;
 import com.sadpumpkin.farm2table.util.factory.ProducerInstance;
+import com.sadpumpkin.farm2table.util.factory.definition.ConsumerDefinition;
+import com.sadpumpkin.farm2table.util.factory.definition.ConverterDefinition;
 import com.sadpumpkin.farm2table.util.factory.definition.ProducerDefinition;
 
 import java.util.ArrayList;
@@ -80,11 +82,11 @@ public class FarmData {
         return _coinsLiveData;
     }
 
-    public long getCoins(){
+    public long getCoins() {
         return coins;
     }
 
-    public void setCoins(Long newCoins){
+    public void setCoins(Long newCoins) {
         coins = newCoins;
         if (_coinsLiveData == null) {
             _coinsLiveData = new MutableLiveData<>(coins);
@@ -106,19 +108,19 @@ public class FarmData {
 
     @Exclude
     public LiveData<HashMap<String, Long>> getInventoryLive() {
-        if(_inventoryLiveData == null){
+        if (_inventoryLiveData == null) {
             _inventoryLiveData = new MutableLiveData<>(inventory);
         }
         return _inventoryLiveData;
     }
 
-    public HashMap<String, Long> getInventory(){
+    public HashMap<String, Long> getInventory() {
         return inventory;
     }
 
-    public void setInventory(HashMap<String, Long> newInventory){
+    public void setInventory(HashMap<String, Long> newInventory) {
         inventory = newInventory;
-        if(_inventoryLiveData == null){
+        if (_inventoryLiveData == null) {
             _inventoryLiveData = new MutableLiveData<>(inventory);
         }
         _inventoryLiveData.postValue(inventory);
@@ -166,6 +168,38 @@ public class FarmData {
         _inventoryLiveData.postValue(inventory);
     }
 
+    public void addConverter(ConverterDefinition definition) {
+        Optional<ConverterInstance> findInstance = converters
+                .stream()
+                .filter(x -> x.getFactoryType().equals(definition.getId()))
+                .findFirst();
+        if (findInstance.isPresent()) {
+            ConverterInstance instance = findInstance.get();
+            instance.setCount(instance.getCount() + 1L);
+        } else {
+            ConverterInstance newInstance = new ConverterInstance(definition);
+            newInstance.setDefinition(definition);
+
+            converters.add(newInstance);
+        }
+    }
+
+    public void addConsumer(ConsumerDefinition definition) {
+        Optional<ConsumerInstance> findInstance = consumers
+                .stream()
+                .filter(x -> x.getFactoryType().equals(definition.getId()))
+                .findFirst();
+        if (findInstance.isPresent()) {
+            ConsumerInstance instance = findInstance.get();
+            instance.setCount(instance.getCount() + 1L);
+        } else {
+            ConsumerInstance newInstance = new ConsumerInstance(definition);
+            newInstance.setDefinition(definition);
+
+            consumers.add(newInstance);
+        }
+    }
+
     public FarmData() {
         _inventoryLiveData = new MutableLiveData<>(inventory);
         _coinsLiveData = new MutableLiveData<>(coins);
@@ -207,11 +241,11 @@ public class FarmData {
     }
 
     private void updateFactoryInstance(ProducerInstance instance, long nowMills, GameDataWrapper gameDataWrapper) {
-        long lastStartMills = timeStampToMills(instance.getLastStart());
-        long progressMills = nowMills - lastStartMills;
-        long durationMills = instance.getDefinition().getDurationMills();
+        long lastStartSec = instance.getLastStart().getSeconds();
+        double progressSec = nowMills / 1000D - lastStartSec;
+        double durationSec = instance.getDefinition().getDurationMills() / 1000D;
 
-        long completions = progressMills / durationMills;
+        long completions = (long) (progressSec / durationSec);
         if (completions > 0) {
             // Add produced resource to inventory
             LiveData<Long> getCount = instance.getCountLive();
@@ -221,11 +255,8 @@ public class FarmData {
             addResource(producedId, producedCount);
 
             // Reset start time
-            long overflowMills = progressMills % durationMills;
-            long backtrackMills = nowMills - overflowMills;
-            //long secondsComponent = backtrackMills / 1000;
-            //int nanoComponent = (int)(backtrackMills % 1000 * 10000);
-            Timestamp newStartTime = Timestamp.now();// new Timestamp(secondsComponent, nanoComponent);
+            long overflowSeconds = (int) (progressSec % durationSec);
+            Timestamp newStartTime = new Timestamp(Timestamp.now().getSeconds() - overflowSeconds, 0);
             instance.setLastStart(newStartTime);
         }
         instance.updateMutableProgress();
@@ -245,11 +276,11 @@ public class FarmData {
     }
 
     private void updateFactoryInstance(ConverterInstance instance, long nowMills, GameDataWrapper gameDataWrapper) {
-        long lastStartMills = timeStampToMills(instance.getLastStart());
-        long progressMills = nowMills - lastStartMills;
-        long durationMills = instance.getDefinition().getDurationMills();
+        long lastStartSec = instance.getLastStart().getSeconds();
+        double progressSec = nowMills / 1000D - lastStartSec;
+        double durationSec = instance.getDefinition().getDurationMills() / 1000D;
 
-        long completions = progressMills / durationMills;
+        long completions = (long) (progressSec / durationSec);
         if (completions > 0) {
             String[] consumedIds = instance.getDefinition().getConsumedIds();
             String producedId = instance.getDefinition().getProducedId();
@@ -273,11 +304,8 @@ public class FarmData {
             }
 
             // Reset start time
-            long overflowMills = progressMills % durationMills;
-            long backtrackMills = nowMills - overflowMills;
-            //long secondsComponent = backtrackMills / 1000;
-            //int nanoComponent = (int)(backtrackMills % 1000 * 10000);
-            Timestamp newStartTime = Timestamp.now();// new Timestamp(secondsComponent, nanoComponent);
+            long overflowSeconds = (int) (progressSec % durationSec);
+            Timestamp newStartTime = new Timestamp(Timestamp.now().getSeconds() - overflowSeconds, 0);
             instance.setLastStart(newStartTime);
         }
         instance.updateMutableProgress();
@@ -294,11 +322,11 @@ public class FarmData {
     }
 
     private void updateFactoryInstance(ConsumerInstance instance, long nowMills, GameDataWrapper gameDataWrapper) {
-        long lastStartMills = timeStampToMills(instance.getLastStart());
-        long progressMills = nowMills - lastStartMills;
-        long durationMills = instance.getDefinition().getDurationMills();
+        long lastStartSec = instance.getLastStart().getSeconds();
+        double progressSec = nowMills / 1000D - lastStartSec;
+        double durationSec = instance.getDefinition().getDurationMills() / 1000D;
 
-        long completions = progressMills / durationMills;
+        long completions = (long) (progressSec / durationSec);
         if (completions > 0) {
             String[] consumedIds = instance.getDefinition().getConsumedIds();
             float valueMultiplier = instance.getDefinition().getValueMultiplier();
@@ -325,11 +353,9 @@ public class FarmData {
             }
 
             // Reset start time
-            long overflowMills = progressMills % durationMills;
-            long backtrackMills = nowMills - overflowMills;
-            //long secondsComponent = backtrackMills / 1000;
-            //int nanoComponent = (int)(backtrackMills % 1000 * 10000);
-            Timestamp newStartTime = Timestamp.now();// new Timestamp(secondsComponent, nanoComponent);
+            long overflowSeconds = (long) (progressSec % durationSec);
+            int overflowNanos = (int) ((progressSec % durationSec) * 1e8);
+            Timestamp newStartTime = new Timestamp(Timestamp.now().getSeconds() - overflowSeconds, overflowNanos);
             instance.setLastStart(newStartTime);
         }
         instance.updateMutableProgress();
@@ -348,7 +374,7 @@ public class FarmData {
     }
 
     public static long timeStampToMills(Timestamp timestamp) {
-        return timestamp.getSeconds() * 1000 + Math.round(timestamp.getNanoseconds() / 0.000001d);
+        return timestamp.getSeconds() * 1000;
     }
 
     public static String findLowestCostOwnedResourceInList(String[] resourceIds, GameDataWrapper gameDataWrapper, Map<String, Long> inventory) {

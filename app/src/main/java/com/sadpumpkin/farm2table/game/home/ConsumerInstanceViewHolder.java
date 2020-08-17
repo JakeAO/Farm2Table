@@ -61,21 +61,28 @@ public class ConsumerInstanceViewHolder extends RecyclerView.ViewHolder {
                            ConsumerDefinition definition,
                            FarmData farmData,
                            GameDataWrapper gameDataWrapper) {
-        long count = instance.getCountLive().getValue();
+        long count = instance.getCount();
         float multiplier = definition.getValueMultiplier();
 
         String consumedResourceId = FarmData.findHighestCostOwnedResourceInList(
                 definition.getConsumedIds(),
                 gameDataWrapper,
-                farmData.getInventoryLive().getValue());
+                farmData.getInventory());
         ResourceDefinition consumedResource = gameDataWrapper.getResourceDefinition(consumedResourceId);
 
-        long coinOutput = Math.round(multiplier * consumedResource.getBasePrice() * count);
-
-        Glide.with(itemView)
-                .load(gameDataWrapper.getImageReference(consumedResource.getPath()))
-                .into(_consumedIcon);
-        _consumedIconLabel.setText("x" + String.valueOf(count));
-        _producedIconLabel.setText("x" + String.valueOf(coinOutput));
+        if (consumedResource == null) {
+            _consumedIcon.setVisibility(View.INVISIBLE);
+            _consumedIconLabel.setVisibility(View.INVISIBLE);
+            _producedIconLabel.setText("?");
+        } else {
+            long coinOutput = Math.round(multiplier * consumedResource.getBasePrice() * count);
+            Glide.with(itemView)
+                    .load(gameDataWrapper.getImageReference(consumedResource.getPath()))
+                    .into(_consumedIcon);
+            _consumedIconLabel.setText("x" + String.valueOf(count));
+            _producedIconLabel.setText("x" + String.valueOf(coinOutput));
+            _consumedIcon.setVisibility(View.VISIBLE);
+            _consumedIconLabel.setVisibility(View.VISIBLE);
+        }
     }
 }

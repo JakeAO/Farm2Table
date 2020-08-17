@@ -61,7 +61,7 @@ public class ConverterInstanceViewHolder extends RecyclerView.ViewHolder {
                            ConverterDefinition definition,
                            FarmData farmData,
                            GameDataWrapper gameDataWrapper) {
-        long count = instance.getCountLive().getValue();
+        long count = instance.getCount();
 
         String consumedResourceId = FarmData.findLowestCostOwnedResourceInList(
                 definition.getConsumedIds(),
@@ -69,10 +69,18 @@ public class ConverterInstanceViewHolder extends RecyclerView.ViewHolder {
                 farmData.getInventoryLive().getValue());
         ResourceDefinition consumedResource = gameDataWrapper.getResourceDefinition(consumedResourceId);
 
-        Glide.with(itemView)
-                .load(gameDataWrapper.getImageReference(consumedResource.getPath()))
-                .into(_consumedIcon);
-        _consumedIconLabel.setText("x" + String.valueOf(count));
-        _producedIconLabel.setText("x" + String.valueOf(count));
+        if (consumedResource == null) {
+            _consumedIcon.setVisibility(View.INVISIBLE);
+            _consumedIconLabel.setVisibility(View.INVISIBLE);
+            _producedIconLabel.setText("?");
+        } else {
+            Glide.with(itemView)
+                    .load(gameDataWrapper.getImageReference(consumedResource.getPath()))
+                    .into(_consumedIcon);
+            _consumedIconLabel.setText("x" + String.valueOf(count));
+            _producedIconLabel.setText("x" + String.valueOf(count));
+            _consumedIcon.setVisibility(View.VISIBLE);
+            _consumedIconLabel.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -263,11 +263,11 @@ public abstract class AsyncLoginBase implements Runnable {
 
             Task<Void> setTask = docRef.set(farmData);
             while (!setTask.isComplete()) {
-                Thread.sleep(100);
+                Thread.sleep(10);
             }
         }
 
-        if(farmData == null){
+        if (farmData == null) {
             return null;
         }
 
@@ -276,11 +276,11 @@ public abstract class AsyncLoginBase implements Runnable {
             producer.init();
         }
         for (ConverterInstance converter : farmData.getConverters()) {
-            converter.setDefinition(gameDataWrapper.getProducerDefinition(converter.getFactoryType()));
+            converter.setDefinition(gameDataWrapper.getConverterDefinition(converter.getFactoryType()));
             converter.init();
         }
         for (ConsumerInstance consumer : farmData.getConsumers()) {
-            consumer.setDefinition(gameDataWrapper.getProducerDefinition(consumer.getFactoryType()));
+            consumer.setDefinition(gameDataWrapper.getConsumerDefinition(consumer.getFactoryType()));
             consumer.init();
         }
 

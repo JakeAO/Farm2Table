@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sadpumpkin.farm2table.R;
 import com.sadpumpkin.farm2table.util.BaseFragment;
+import com.sadpumpkin.farm2table.util.factory.ConsumerInstance;
+import com.sadpumpkin.farm2table.util.factory.ConverterInstance;
+import com.sadpumpkin.farm2table.util.factory.definition.ConsumerDefinition;
+import com.sadpumpkin.farm2table.util.factory.definition.ConverterDefinition;
 
 public class BuildFragment extends BaseFragment {
 
@@ -32,16 +36,31 @@ public class BuildFragment extends BaseFragment {
         _recyclerView = view.findViewById(R.id.recyclerView);
         _recyclerView.setLayoutManager(new LinearLayoutManager(_activity));
         _recyclerView.setHasFixedSize(true);
-        _recyclerView.setAdapter(new BuildingAdapter(_gameData,
-                this::onAttemptPurchaseConverter,
-                this::onAttemptPurchaseConsumer));
+        _recyclerView.setAdapter(
+                new BuildingAdapter(
+                        _userData.farm(),
+                        _gameData,
+                        this::onAttemptPurchaseConverter,
+                        this::onAttemptPurchaseConsumer));
     }
 
     private void onAttemptPurchaseConverter(String converterId) {
-        Log.d("PURCHASE", "onAttemptPurchaseConverter: " + converterId);
+        ConverterDefinition definition = _gameData.getConverterDefinition(converterId);
+        long currentCoins = _userData.farm().getCoins();
+
+        if (definition != null && currentCoins >= definition.getBaseCost()) {
+            _userData.farm().addConverter(definition);
+            _userData.farm().setCoins(currentCoins - definition.getBaseCost());
+        }
     }
 
     private void onAttemptPurchaseConsumer(String consumerId) {
-        Log.d("PURCHASE", "onAttemptPurchaseConsumer: " + consumerId);
+        ConsumerDefinition definition = _gameData.getConsumerDefinition(consumerId);
+        long currentCoins = _userData.farm().getCoins();
+
+        if (definition != null && currentCoins >= definition.getBaseCost()) {
+            _userData.farm().addConsumer(definition);
+            _userData.farm().setCoins(currentCoins - definition.getBaseCost());
+        }
     }
 }

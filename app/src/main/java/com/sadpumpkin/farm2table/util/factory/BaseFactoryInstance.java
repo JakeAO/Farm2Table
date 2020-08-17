@@ -63,7 +63,7 @@ public abstract class BaseFactoryInstance {
         return _mutableCount;
     }
 
-    public long getCount(){
+    public long getCount() {
         return _count;
     }
 
@@ -89,13 +89,13 @@ public abstract class BaseFactoryInstance {
     }
 
     public void updateMutableProgress() {
-        long startMills = _lastStart.getSeconds() * 1000;
-        long nowMills = Timestamp.now().getSeconds() * 1000;
-        long progressMills = nowMills - startMills;
-        long durationMills = _definition.getDurationMills();
-        if(_mutableProgress == null){
+        double startSec = _lastStart.getSeconds() + _lastStart.getNanoseconds() * 1e-9;
+        double nowSec = Timestamp.now().getSeconds() + Timestamp.now().getNanoseconds() * 1e-9;
+        double progressSec = nowSec - startSec;
+        double durationSec = _definition.getDurationMills() / 1000D;
+        if (_mutableProgress == null) {
             _mutableProgress = new MutableLiveData<>(0D);
         }
-        _mutableProgress.postValue(progressMills / (double) durationMills);
+        _mutableProgress.postValue(progressSec / durationSec);
     }
 }

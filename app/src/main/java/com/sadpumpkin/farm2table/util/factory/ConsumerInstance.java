@@ -20,4 +20,9 @@ public class ConsumerInstance extends BaseFactoryInstance {
     public ConsumerInstance(String factoryType, Timestamp lastStart, Long count) {
         super(factoryType, lastStart, count);
     }
+
+    public ConsumerInstance(ConsumerDefinition definition){
+        super(definition.getId(), Timestamp.now(), 1L);
+        setDefinition(definition);
+    }
 }

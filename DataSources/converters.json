@@ -1,3 +1,27 @@
 [
-    
+    { "id": "conv_bakery_bread", "name": "Bread Bakery", "producedId": "res_bread", "duration": 5000, "cost": 1000, 
+        "consumedId": [
+            "res_wheat",
+            "res_acorn"
+        ] 
+    },
+    { "id": "conv_cannery_jam", "name": "Jam Cannery", "producedId": "res_jam", "duration": 5000, "cost": 1000, 
+        "consumedId": [
+            "res_blueberries",
+            "res_cherry",
+            "res_cranberries",
+            "res_mango",
+            "res_peach",
+            "res_strawberries",
+            "res_wildBerries"
+        ] 
+    },
+    { "id": "conv_vineyard", "name": "Jam Cannery", "producedId": "res_wine", "duration": 15000, "cost": 5000, 
+        "consumedId": [
+            "res_grapesGreen",
+            "res_grapesPurple",
+            "res_grapesRed",
+            "res_grapesWhite"
+        ] 
+    }
 ]
