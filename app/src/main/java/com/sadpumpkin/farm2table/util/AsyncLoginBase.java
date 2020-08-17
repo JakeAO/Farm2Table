@@ -273,12 +273,15 @@ public abstract class AsyncLoginBase implements Runnable {
 
         for (ProducerInstance producer : farmData.getProducers()) {
             producer.setDefinition(gameDataWrapper.getProducerDefinition(producer.getFactoryType()));
+            producer.init();
         }
         for (ConverterInstance converter : farmData.getConverters()) {
             converter.setDefinition(gameDataWrapper.getProducerDefinition(converter.getFactoryType()));
+            converter.init();
         }
         for (ConsumerInstance consumer : farmData.getConsumers()) {
             consumer.setDefinition(gameDataWrapper.getProducerDefinition(consumer.getFactoryType()));
+            consumer.init();
         }
 
         return farmData;

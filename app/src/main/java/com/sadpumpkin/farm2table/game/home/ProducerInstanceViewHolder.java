@@ -33,14 +33,30 @@ public class ProducerInstanceViewHolder extends RecyclerView.ViewHolder {
         _producedIconLabel = itemView.findViewById(R.id.producedIconLabel);
     }
 
-    public void setInstance(ProducerInstance instance, GameDataWrapper gameDataWrapper) {
-        ProducerDefinition producerDefinition = (ProducerDefinition)instance.getDefinition();
-        ResourceDefinition producedResource = gameDataWrapper.getResourceDefinition(producerDefinition.getProducedId());
+    public void setInstance(ProducerInstance instance,
+                            ProducerDefinition definition,
+                            GameDataWrapper gameDataWrapper) {
 
-        _nameLabel.setText(producerDefinition.getName());
+        ResourceDefinition producedResource = gameDataWrapper.getResourceDefinition(definition.getProducedId());
+
+        _nameLabel.setText(definition.getName());
         Glide.with(itemView)
                 .load(gameDataWrapper.getImageReference(producedResource.getPath()))
                 .into(_producedIcon);
-        _producedIconLabel.setText("x1");
+
+        updateView(instance, definition, gameDataWrapper);
+    }
+
+    public void updateProgress(Double newProgress) {
+        _progressBar.setProgress((int) Math.round(newProgress * 100));
+        _progressBarLabel.setText(String.valueOf(Math.round(newProgress * 100) + "%"));
+    }
+
+    public void updateView(ProducerInstance instance,
+                           ProducerDefinition definition,
+                           GameDataWrapper gameDataWrapper) {
+        Long count = instance.getCountLive().getValue();
+
+        _producedIconLabel.setText("x" + String.valueOf(count));
     }
 }

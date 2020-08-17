@@ -8,15 +8,44 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 
 public class UserDataWrapper extends ViewModel {
+    private static final int TICK_FREQUENCY = 1000;
+
+    private GameDataWrapper _gameData;
+
     private FirebaseUser _user;
     private FarmData _farm;
+
+    private Thread _activeTickThread = null;
+
+    public void setGameDataDependency(GameDataWrapper gameDataWrapper){
+        _gameData = gameDataWrapper;
+    }
 
     public void setUser(FirebaseUser user){
         _user = user;
     }
 
-    public void setFarm(FarmData farm){
+    public void setFarm(FarmData farm) {
         _farm = farm;
+
+        // Clear old Tick
+        if (_activeTickThread != null) {
+            _activeTickThread.stop();
+            _activeTickThread = null;
+        }
+
+        // Start new Tick
+        _activeTickThread = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(TICK_FREQUENCY);
+                    _farm.tick(TICK_FREQUENCY, _gameData);
+                } catch (InterruptedException ex) {
+                    break;
+                }
+            }
+        });
+        _activeTickThread.start();
     }
 
     public FirebaseUser user() {

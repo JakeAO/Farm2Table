@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -52,15 +53,20 @@ public class GameFragment extends BaseFragment {
         _navBar.injectDependencies(_navController, _headerGroup, _headerLabel);
         _navBar.jumpToTab(R.id.home_navigation);
 
-        //LiveData<Long> coinsData = _userData.farm().getCoins();
-        _coinsLabel.setText(String.valueOf(_userData.farm().getCoins()));
-//        coinsData.observe(getViewLifecycleOwner(), newCoinsValue ->
-//                _coinsLabel.setText(String.valueOf(newCoinsValue))
-//        );
-
+        LiveData<Long> coinsData = _userData.farm().getCoinsLive();
+        _coinsLabel.setText(String.valueOf(coinsData.getValue()));
+        coinsData.observe(getViewLifecycleOwner(), newCoinsValue ->
+                _coinsLabel.setText(String.valueOf(newCoinsValue)));
     }
 
     public NavController getNavController() {
         return _navController;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        _firebase.getUserDocRef(_userData.user()).set(_userData.farm());
     }
 }

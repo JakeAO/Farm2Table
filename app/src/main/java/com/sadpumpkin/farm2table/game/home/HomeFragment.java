@@ -31,6 +31,6 @@ public class HomeFragment extends BaseFragment {
         _recyclerView = view.findViewById(R.id.recyclerView);
         _recyclerView.setLayoutManager(new LinearLayoutManager(_activity));
         _recyclerView.setHasFixedSize(true);
-        _recyclerView.setAdapter(new FactoryInstanceAdapter(_userData.farm(), _gameData));
+        _recyclerView.setAdapter(new FactoryInstanceAdapter(this, _userData.farm(), _gameData));
     }
 }

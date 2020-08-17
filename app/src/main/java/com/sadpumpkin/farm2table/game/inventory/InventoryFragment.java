@@ -35,7 +35,7 @@ public class InventoryFragment extends BaseFragment {
         _recyclerView.setHasFixedSize(true);
         _recyclerView.setAdapter(resourceAdapter);
 
-//        _userData.farm().getInventory().observe(getViewLifecycleOwner(), newMap ->
-//                resourceAdapter.setData(newMap.entrySet()));
+        _userData.farm().getInventoryLive().observe(getViewLifecycleOwner(), newMap ->
+                resourceAdapter.setData(newMap.entrySet()));
     }
 }

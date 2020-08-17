@@ -25,8 +25,6 @@ public class ResourceAdapter extends RecyclerView.Adapter<ResourceViewHolder> {
     public ResourceAdapter(FarmData farmData, GameDataWrapper gameDataWrapper) {
         _farmData = farmData;
         _gameData = gameDataWrapper;
-
-        setData(farmData.getInventory().entrySet());
     }
 
     @NonNull

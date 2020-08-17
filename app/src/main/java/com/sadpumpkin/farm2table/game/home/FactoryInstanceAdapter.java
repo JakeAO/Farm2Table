@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sadpumpkin.farm2table.R;
@@ -25,12 +26,14 @@ public class FactoryInstanceAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final int ITEM_TYPE_CONVERTER = 694;
     private static final int ITEM_TYPE_CONSUMER = 48;
 
+    private LifecycleOwner _lifecycleOwner = null;
     private FarmData _farmData = null;
     private GameDataWrapper _gameData = null;
 
     private ArrayList<BaseFactoryInstance> _allInstances = new ArrayList<>();
 
-    public FactoryInstanceAdapter(FarmData farmData, GameDataWrapper gameDataWrapper) {
+    public FactoryInstanceAdapter(LifecycleOwner lifecycleOwner, FarmData farmData, GameDataWrapper gameDataWrapper) {
+        _lifecycleOwner = lifecycleOwner;
         _farmData = farmData;
         _gameData = gameDataWrapper;
 
@@ -66,21 +69,33 @@ public class FactoryInstanceAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 ProducerInstanceViewHolder typedHolder = (ProducerInstanceViewHolder) holder;
                 ProducerInstance instance = (ProducerInstance) _allInstances.get(position);
                 ProducerDefinition definition = _gameData.getProducerDefinition(instance.getFactoryType());
-                typedHolder.setInstance(instance, _gameData);
+                typedHolder.setInstance(instance, definition, _gameData);
+
+                instance.getProgressLive().observe(_lifecycleOwner, typedHolder::updateProgress);
+                instance.getCountLive().observe(_lifecycleOwner, newCount ->
+                        typedHolder.updateView(instance, definition, _gameData));
+                break;
             }
-            break;
             case ITEM_TYPE_CONVERTER: {
                 ConverterInstanceViewHolder typedHolder = (ConverterInstanceViewHolder) holder;
                 ConverterInstance instance = (ConverterInstance) _allInstances.get(position);
                 ConverterDefinition definition = _gameData.getConverterDefinition(instance.getFactoryType());
-                typedHolder.setInstance(instance, definition, _gameData);
+                typedHolder.setInstance(instance, definition, _farmData, _gameData);
+
+                instance.getProgressLive().observe(_lifecycleOwner, typedHolder::updateProgress);
+                instance.getCountLive().observe(_lifecycleOwner, newCount ->
+                        typedHolder.updateView(instance, definition, _farmData, _gameData));
                 break;
             }
             case ITEM_TYPE_CONSUMER: {
                 ConsumerInstanceViewHolder typedHolder = (ConsumerInstanceViewHolder) holder;
                 ConsumerInstance instance = (ConsumerInstance) _allInstances.get(position);
                 ConsumerDefinition definition = _gameData.getConsumerDefinition(instance.getFactoryType());
-                typedHolder.setInstance(instance, definition, _gameData);
+                typedHolder.setInstance(instance, definition, _farmData, _gameData);
+
+                instance.getProgressLive().observe(_lifecycleOwner, typedHolder::updateProgress);
+                instance.getCountLive().observe(_lifecycleOwner, newCount ->
+                        typedHolder.updateView(instance, definition, _farmData, _gameData));
                 break;
             }
         }

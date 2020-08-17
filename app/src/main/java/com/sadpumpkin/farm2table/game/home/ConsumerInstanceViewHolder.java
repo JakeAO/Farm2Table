@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.sadpumpkin.farm2table.R;
+import com.sadpumpkin.farm2table.util.FarmData;
 import com.sadpumpkin.farm2table.util.GameDataWrapper;
 import com.sadpumpkin.farm2table.util.ResourceDefinition;
 import com.sadpumpkin.farm2table.util.factory.ConsumerInstance;
@@ -37,17 +38,44 @@ public class ConsumerInstanceViewHolder extends RecyclerView.ViewHolder {
         _producedIconLabel = itemView.findViewById(R.id.producedIconLabel);
     }
 
-    public void setInstance(ConsumerInstance instance, ConsumerDefinition definition, GameDataWrapper gameDataWrapper) {
-//        ResourceDefinition consumedResource = gameDataWrapper.getResourceDefinition(definition.getConsumedId());
+    public void setInstance(ConsumerInstance instance,
+                            ConsumerDefinition definition,
+                            FarmData farmData,
+                            GameDataWrapper gameDataWrapper) {
 
         _nameLabel.setText(definition.getName());
-//        Glide.with(itemView)
-//                .load(gameDataWrapper.getImageReference(consumedResource.getPath()))
-//                .into(_consumedIcon);
-        _consumedIconLabel.setText("x1");
         Glide.with(itemView)
                 .load(R.drawable.ui_graphic_coin)
                 .into(_producedIcon);
-        _producedIconLabel.setText("x" + definition.getBaseCost());
+        updateView(instance, definition, farmData, gameDataWrapper);
+    }
+
+    public void updateProgress(Double newProgress) {
+        _progressBar.setMin(0);
+        _progressBar.setMax(100);
+        _progressBar.setProgress((int) Math.round(newProgress * 100));
+        _progressBarLabel.setText(String.valueOf(Math.round(newProgress * 100) + "%"));
+    }
+
+    public void updateView(ConsumerInstance instance,
+                           ConsumerDefinition definition,
+                           FarmData farmData,
+                           GameDataWrapper gameDataWrapper) {
+        long count = instance.getCountLive().getValue();
+        float multiplier = definition.getValueMultiplier();
+
+        String consumedResourceId = FarmData.findHighestCostOwnedResourceInList(
+                definition.getConsumedIds(),
+                gameDataWrapper,
+                farmData.getInventoryLive().getValue());
+        ResourceDefinition consumedResource = gameDataWrapper.getResourceDefinition(consumedResourceId);
+
+        long coinOutput = Math.round(multiplier * consumedResource.getBasePrice() * count);
+
+        Glide.with(itemView)
+                .load(gameDataWrapper.getImageReference(consumedResource.getPath()))
+                .into(_consumedIcon);
+        _consumedIconLabel.setText("x" + String.valueOf(count));
+        _producedIconLabel.setText("x" + String.valueOf(coinOutput));
     }
 }
