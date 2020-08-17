@@ -38,7 +38,7 @@
     </fragment>
     <fragment
         android:id="@+id/build_navigation"
-        android:name="com.sadpumpkin.farm2table.game.build.BuildFragment"
+        android:name="com.sadpumpkin.farm2table.game.buildings.BuildFragment"
         tools:layout="@layout/fragment_build">
         <action
             android:id="@+id/action_build_navigation_to_inventory_navigation"
