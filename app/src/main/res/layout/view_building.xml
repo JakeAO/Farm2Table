@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="75dp">
+    android:layout_height="50dp">
 
     <ImageView
         android:id="@+id/background"
@@ -16,94 +16,83 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ui_banner_wood" />
+        app:srcCompat="@drawable/ui_panel_tab_active" />
 
     <TextView
         android:id="@+id/titleLabel"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="90dp"
-        android:layout_marginBottom="35dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
         android:fontFamily="@font/quicksand_medium"
         android:text="TextView"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/consumedIcon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/consumedIcon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginBottom="5dp"
+        android:layout_width="35dp"
+        android:layout_height="0dp"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ui_graphic_coin" />
+        app:layout_constraintBottom_toBottomOf="@+id/producedIcon"
+        app:layout_constraintEnd_toStartOf="@+id/conversionArrow"
+        app:layout_constraintTop_toTopOf="@+id/producedIcon"
+        app:srcCompat="@drawable/ic_dummy_resource" />
 
     <ImageView
         android:id="@+id/conversionArrow"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_height="20dp"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/consumedIcon"
-        app:layout_constraintTop_toBottomOf="@+id/titleLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/producedIcon"
+        app:layout_constraintEnd_toStartOf="@+id/producedIcon"
+        app:layout_constraintTop_toTopOf="@+id/producedIcon"
         app:srcCompat="@drawable/ic_arrow" />
 
     <ImageView
         android:id="@+id/producedIcon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_width="35dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="12dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/conversionArrow"
-        app:srcCompat="@drawable/ui_graphic_coin" />
+        app:layout_constraintEnd_toStartOf="@+id/buyButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_dummy_resource" />
+
+    <TextView
+        android:id="@+id/priceMultiplierLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand_medium"
+        android:text="50%"
+        android:textAlignment="textEnd"
+        android:textColor="#000000"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/producedIcon"
+        app:layout_constraintEnd_toStartOf="@+id/buyButton"
+        app:layout_constraintStart_toEndOf="@+id/conversionArrow" />
 
     <Button
         android:id="@+id/buyButton"
-        android:layout_width="75dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/ui_button_green"
-        android:text="@string/button_buy"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="7dp"
+        android:backgroundTint="#4CAF50"
+        android:fontFamily="@font/quicksand_medium"
+        android:text="Button"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/costLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/quicksand_medium"
-        android:text="123456789"
-        android:textAlignment="textEnd"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/coinsIcon"
-        app:layout_constraintTop_toBottomOf="@+id/buyButton"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/coinsIcon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginEnd="10dp"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buyButton"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ui_graphic_coin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

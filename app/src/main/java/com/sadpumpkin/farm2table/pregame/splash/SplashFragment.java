@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,7 +31,6 @@ public class SplashFragment extends BaseFragment {
 
     private static final int RC_SIGN_IN = 1125;
 
-    private ImageButton _creditsButton = null;
     private Button _playButton = null;
     private Button _newUserButton = null;
     private Button _loginButton = null;
@@ -48,13 +46,11 @@ public class SplashFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        _creditsButton = view.findViewById(R.id.creditsButton);
         _playButton = view.findViewById(R.id.playButton);
         _newUserButton = view.findViewById(R.id.newUserButton);
         _loginButton = view.findViewById(R.id.loginButton);
         _accountIdLabel = view.findViewById(R.id.accountIdLabel);
 
-        _creditsButton.setOnClickListener(clickedView -> _mainNavController.navigate(R.id.credits_navigation));
         _loginButton.setOnClickListener(clickedView -> onLoginAttempt());
         _playButton.setOnClickListener(clickedView -> new Thread(new LoginReturning(_handler, _activity, _firebase, _userData, _gameData, this::onLoginResult)).start());
         _newUserButton.setOnClickListener(clickedView -> new Thread(new LoginAnonymous(_handler, _activity, _firebase, _userData, _gameData, this::onLoginResult)).start());
@@ -80,9 +76,7 @@ public class SplashFragment extends BaseFragment {
                 .createSignInIntentBuilder()
                 .setAvailableProviders(Arrays.asList(
                         new AuthUI.IdpConfig.AnonymousBuilder().build(),
-                        new AuthUI.IdpConfig.EmailBuilder().build(),
-                        new AuthUI.IdpConfig.GoogleBuilder().build(),
-                        new AuthUI.IdpConfig.PhoneBuilder().build()
+                        new AuthUI.IdpConfig.EmailBuilder().build()
                 ))
                 .build();
 

@@ -18,8 +18,12 @@ public abstract class BaseFactoryInstance {
     private Timestamp _lastStart;
     private Long _count;
 
+    @Exclude
+    private Boolean _active = false;
+
     private MutableLiveData<Double> _mutableProgress = null;
     private MutableLiveData<Long> _mutableCount = null;
+    private MutableLiveData<Boolean> _mutableActive = null;
 
     protected BaseFactoryInstance() {
         _factoryType = "ERROR";
@@ -36,6 +40,7 @@ public abstract class BaseFactoryInstance {
     public void init() {
         _mutableProgress = new MutableLiveData<>();
         _mutableCount = new MutableLiveData<>(_count);
+        _mutableActive = new MutableLiveData<>(_active);
     }
 
     public String getFactoryType() {
@@ -84,11 +89,25 @@ public abstract class BaseFactoryInstance {
     }
 
     @Exclude
+    public Boolean getActive() {
+        return _active;
+    }
+
+    @Exclude
+    public LiveData<Boolean> getActiveLive() {
+        if (_mutableActive == null) {
+            _mutableActive = new MutableLiveData<>(_active);
+            _mutableActive.postValue(_active);
+        }
+        return _mutableActive;
+    }
+
+    @Exclude
     public void setDefinition(BaseFactoryDefinition definition) {
         _definition = definition;
     }
 
-    public void updateMutableProgress() {
+    public void updateMutableProgress(boolean active) {
         double startSec = _lastStart.getSeconds() + _lastStart.getNanoseconds() * 1e-9;
         double nowSec = Timestamp.now().getSeconds() + Timestamp.now().getNanoseconds() * 1e-9;
         double progressSec = nowSec - startSec;
@@ -97,5 +116,10 @@ public abstract class BaseFactoryInstance {
             _mutableProgress = new MutableLiveData<>(0D);
         }
         _mutableProgress.postValue(progressSec / durationSec);
+
+        if (_mutableActive == null) {
+            _mutableActive = new MutableLiveData<>(false);
+        }
+        _mutableActive.postValue(active);
     }
 }

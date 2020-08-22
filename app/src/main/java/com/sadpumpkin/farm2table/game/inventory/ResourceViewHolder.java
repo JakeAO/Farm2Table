@@ -16,6 +16,7 @@ public class ResourceViewHolder extends RecyclerView.ViewHolder {
 
     private ImageView _iconImage;
     private TextView _titleLabel;
+    private TextView _priceLabel;
     private TextView _countLabel;
 
     public ResourceViewHolder(@NonNull View itemView) {
@@ -24,6 +25,7 @@ public class ResourceViewHolder extends RecyclerView.ViewHolder {
         _iconImage = itemView.findViewById(R.id.iconImage);
         _titleLabel = itemView.findViewById(R.id.titleLabel);
         _countLabel = itemView.findViewById(R.id.countLabel);
+        _priceLabel = itemView.findViewById(R.id.priceLabel);
     }
 
     public void setData(ResourceDefinition definition, Long count, GameDataWrapper gameDataWrapper) {
@@ -32,5 +34,6 @@ public class ResourceViewHolder extends RecyclerView.ViewHolder {
                 .into(_iconImage);
         _titleLabel.setText(definition.getName());
         _countLabel.setText(String.valueOf(count));
+        _priceLabel.setText(String.valueOf(definition.getBasePrice()));
     }
 }

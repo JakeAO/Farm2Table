@@ -259,7 +259,7 @@ public abstract class AsyncLoginBase implements Runnable {
         if (docSnapshot.exists()) {
             farmData = docSnapshot.toObject(FarmData.class);
         } else {
-            farmData = FarmData.BuildDefault(gameDataWrapper.getAllSeeds(), gameDataWrapper.getAllProducers());
+            farmData = FarmData.BuildDefault(gameDataWrapper.getAllConsumers());
 
             Task<Void> setTask = docRef.set(farmData);
             while (!setTask.isComplete()) {

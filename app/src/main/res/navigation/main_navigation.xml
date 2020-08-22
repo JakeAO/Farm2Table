@@ -15,14 +15,6 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
-        <action
-            android:id="@+id/action_main_navigation_to_placeholder3"
-            app:destination="@id/credits_navigation"
-            app:popUpTo="@id/splash_navigation"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/game_navigation"
@@ -35,17 +27,5 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
-    <fragment
-        android:id="@+id/credits_navigation"
-        android:name="com.sadpumpkin.farm2table.pregame.credits.CreditsFragment"
-        tools:layout="@layout/fragment_credits">
-        <action
-            android:id="@+id/action_credits_navigation_to_splash_navigation"
-            app:destination="@id/splash_navigation"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
 </navigation>

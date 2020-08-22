@@ -49,7 +49,12 @@ public class ProducerInstanceViewHolder extends RecyclerView.ViewHolder {
 
     public void updateProgress(Double newProgress) {
         _progressBar.setProgress((int) Math.round(newProgress * 100));
-        _progressBarLabel.setText(String.valueOf(Math.round(newProgress * 100) + "%"));
+        _progressBarLabel.setText(Math.round(newProgress * 100) + "%");
+    }
+
+    public void updateActive(boolean active) {
+        _progressBar.setVisibility(active ? View.VISIBLE : View.INVISIBLE);
+        _progressBarLabel.setVisibility(active ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void updateView(ProducerInstance instance,
@@ -57,6 +62,6 @@ public class ProducerInstanceViewHolder extends RecyclerView.ViewHolder {
                            GameDataWrapper gameDataWrapper) {
         Long count = instance.getCountLive().getValue();
 
-        _producedIconLabel.setText("x" + String.valueOf(count));
+        _producedIconLabel.setText("x" + count);
     }
 }

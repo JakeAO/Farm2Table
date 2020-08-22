@@ -75,6 +75,13 @@ public class GameFragment extends BaseFragment {
             while (true) {
                 try {
                     Thread.sleep(TICK_FREQUENCY);
+
+                    if (_userData == null ||
+                            _userData.farm() == null ||
+                            _userData.farm().getInventory() == null) {
+                        continue;
+                    }
+
                     _userData.farm().tick(TICK_FREQUENCY, _gameData);
                 } catch (InterruptedException ex) {
                     break;
@@ -88,7 +95,10 @@ public class GameFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
 
-        _firebase.getUserDocRef(_userData.user()).set(_userData.farm());
+        try {
+            _firebase.getUserDocRef(_userData.user()).set(_userData.farm());
+        } catch (NullPointerException ex) {
+        }
 
         // Clear old Tick
         if (_activeTickThread != null) {

@@ -51,6 +51,12 @@ public class ResourceAdapter extends RecyclerView.Adapter<ResourceViewHolder> {
 
     public void setData(Collection<Map.Entry<String, Long>> entries) {
         _inventory = new ArrayList<>(entries);
+        _inventory.sort((lhs, rhs) -> {
+            ResourceDefinition lhsDef = _gameData.getResourceDefinition(lhs.getKey());
+            ResourceDefinition rhsDef = _gameData.getResourceDefinition(rhs.getKey());
+
+            return lhsDef.getBasePrice().compareTo(rhsDef.getBasePrice());
+        });
         notifyDataSetChanged();
     }
 }

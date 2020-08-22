@@ -17,49 +17,31 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
 
 public class FarmData {
 
     private static final long STARTING_GOLD = 500L;
 
-    public static FarmData BuildDefault(Collection<SeedDefinition> allSeeds,
-                                        Collection<ProducerDefinition> allProducers) {
-        Random random = new Random();
+    public static FarmData BuildDefault(Collection<ConsumerDefinition> allConsumerDefs) {
 
-        ArrayList<SeedDefinition> seeds = new ArrayList<>(allSeeds);
-        List<ProducerInstance> startingProducers = new ArrayList<>(3);
-        for (int i = 0; i < 3; i++) {
-            while (true) {
-                int index = random.nextInt(seeds.size());
-                SeedDefinition seedDef = seeds.get(index);
-                boolean alreadyExists = startingProducers
-                        .stream()
-                        .anyMatch(x -> x.getDefinition() instanceof ProducerDefinition &&
-                                ((ProducerDefinition) x.getDefinition()).getSeedId() == seedDef.getId());
-                if (alreadyExists)
-                    continue;
-
-                ProducerDefinition producerDef = allProducers
-                        .stream()
-                        .filter(x -> x.getSeedId().equals(seedDef.getId()))
-                        .findFirst()
-                        .orElse(null);
-                if (producerDef == null)
-                    continue;
-
-                startingProducers.add(new ProducerInstance(producerDef));
-                break;
+        long lowestCost = Long.MAX_VALUE;
+        ConsumerDefinition defaultConsumerDef = null;
+        for(ConsumerDefinition consumerDef : allConsumerDefs) {
+            if (consumerDef.getCost() < lowestCost) {
+                lowestCost = consumerDef.getCost();
+                defaultConsumerDef = consumerDef;
             }
         }
 
+        ArrayList<ConsumerInstance> defaultConsumerList = new ArrayList<>(1);
+        defaultConsumerList.add(new ConsumerInstance(defaultConsumerDef));
+
         return new FarmData(
                 STARTING_GOLD,
-                startingProducers,
-                List.of(),
-                List.of(),
-                Map.of()
+                new ArrayList<>(),
+                new ArrayList<>(),
+                defaultConsumerList,
+                new HashMap<>()
         );
     }
 
@@ -128,29 +110,27 @@ public class FarmData {
 
     public void addForage(List<String> seedIds, GameDataWrapper gameDataWrapper) {
         for (String seedId : seedIds) {
-            Optional<ProducerInstance> findInstance = producers
-                    .stream()
-                    .filter(x -> x.getDefinition() instanceof ProducerDefinition &&
-                            ((ProducerDefinition) x.getDefinition()).getSeedId().equals(seedId))
-                    .findFirst();
-            if (findInstance.isPresent()) {
-                ProducerInstance instance = findInstance.get();
-                instance.setCount(instance.getCountLive().getValue() + 1);
-            } else {
-                Optional<ProducerDefinition> findDefinition = gameDataWrapper
-                        .getAllProducers()
-                        .stream()
-                        .filter(x -> x.getSeedId().equals(seedId))
-                        .findFirst();
-                if (findDefinition.isPresent()) {
-                    ProducerDefinition definition = findDefinition.get();
-                    ProducerInstance newInstance = new ProducerInstance(
-                            definition.getId(),
-                            Timestamp.now(),
-                            1L);
-                    newInstance.setDefinition(definition);
+            ProducerInstance existingInstance = null;
+            for (ProducerInstance producerInst : producers) {
+                if (producerInst.getDefinition().getSeedId().equals(seedId)) {
+                    existingInstance = producerInst;
+                    existingInstance.setCount(existingInstance.getCount() + 1);
+                    break;
+                }
+            }
 
-                    producers.add(newInstance);
+            if (existingInstance == null) {
+                for (ProducerDefinition producerDef : gameDataWrapper.getAllProducers()) {
+                    if (producerDef.getSeedId().equals(seedId)) {
+                        ProducerInstance newInstance = new ProducerInstance(
+                                producerDef.getId(),
+                                Timestamp.now(),
+                                1L);
+                        newInstance.setDefinition(producerDef);
+
+                        producers.add(newInstance);
+                        break;
+                    }
                 }
             }
         }
@@ -169,14 +149,15 @@ public class FarmData {
     }
 
     public void addConverter(ConverterDefinition definition) {
-        Optional<ConverterInstance> findInstance = converters
-                .stream()
-                .filter(x -> x.getFactoryType().equals(definition.getId()))
-                .findFirst();
-        if (findInstance.isPresent()) {
-            ConverterInstance instance = findInstance.get();
-            instance.setCount(instance.getCount() + 1L);
-        } else {
+        ConverterInstance existingInstance = null;
+        for (ConverterInstance converterInst : converters) {
+            if (converterInst.getFactoryType().equals(definition.getId())) {
+                existingInstance = converterInst;
+                existingInstance.setCount(existingInstance.getCount() + 1L);
+            }
+        }
+
+        if (existingInstance == null) {
             ConverterInstance newInstance = new ConverterInstance(definition);
             newInstance.setDefinition(definition);
 
@@ -185,14 +166,15 @@ public class FarmData {
     }
 
     public void addConsumer(ConsumerDefinition definition) {
-        Optional<ConsumerInstance> findInstance = consumers
-                .stream()
-                .filter(x -> x.getFactoryType().equals(definition.getId()))
-                .findFirst();
-        if (findInstance.isPresent()) {
-            ConsumerInstance instance = findInstance.get();
-            instance.setCount(instance.getCount() + 1L);
-        } else {
+        ConsumerInstance existingInstance = null;
+        for (ConsumerInstance consumerInst : consumers) {
+            if (consumerInst.getFactoryType().equals(definition.getId())) {
+                existingInstance = consumerInst;
+                existingInstance.setCount(existingInstance.getCount() + 1L);
+            }
+        }
+
+        if (existingInstance == null) {
             ConsumerInstance newInstance = new ConsumerInstance(definition);
             newInstance.setDefinition(definition);
 
@@ -237,7 +219,8 @@ public class FarmData {
     }
 
     private void sortProducers(GameDataWrapper gameDataWrapper) {
-        // Producers don't need any specific sorting since they execute first
+        // Prioritize producers based on their count.
+        producers.sort((lhs, rhs) -> Long.compare(lhs.getCount(), rhs.getCount()));
     }
 
     private void updateFactoryInstance(ProducerInstance instance, long nowMills, GameDataWrapper gameDataWrapper) {
@@ -259,14 +242,14 @@ public class FarmData {
             Timestamp newStartTime = new Timestamp(Timestamp.now().getSeconds() - overflowSeconds, 0);
             instance.setLastStart(newStartTime);
         }
-        instance.updateMutableProgress();
+        instance.updateMutableProgress(true);
     }
 
     private void sortConverters(GameDataWrapper gameDataWrapper) {
         // Prioritize converters based on how many resources are available to convert.
         converters.sort((lhs, rhs) -> {
-            String[] lhsConsumed = lhs.getDefinition().getConsumedIds();
-            String[] rhsConsumed = rhs.getDefinition().getConsumedIds();
+            List<String> lhsConsumed = lhs.getDefinition().getConsumedIds();
+            List<String> rhsConsumed = rhs.getDefinition().getConsumedIds();
 
             long lhsTotalConsumable = countOfResourcesInInventory(lhsConsumed);
             long rhsTotalConsumable = countOfResourcesInInventory(rhsConsumed);
@@ -276,18 +259,17 @@ public class FarmData {
     }
 
     private void updateFactoryInstance(ConverterInstance instance, long nowMills, GameDataWrapper gameDataWrapper) {
+
+        List<String> consumedIds = instance.getDefinition().getConsumedIds();
+
         long lastStartSec = instance.getLastStart().getSeconds();
         double progressSec = nowMills / 1000D - lastStartSec;
         double durationSec = instance.getDefinition().getDurationMills() / 1000D;
 
         long completions = (long) (progressSec / durationSec);
         if (completions > 0) {
-            String[] consumedIds = instance.getDefinition().getConsumedIds();
-            String producedId = instance.getDefinition().getProducedId();
-
             // Convert 1:1 the lowest cost consumedId for the producedId
-            LiveData<Long> getCount = instance.getCountLive();
-            long maxConvertedCount = (getCount.getValue() == null ? 1L : getCount.getValue()) * completions;
+            long maxConvertedCount = instance.getCount() * completions;
             for (int i = 0; i < maxConvertedCount; i++) {
                 String consumedId = findLowestCostOwnedResourceInList(consumedIds, gameDataWrapper, inventory);
                 if (consumedId == null)
@@ -300,6 +282,8 @@ public class FarmData {
                     inventory.remove(consumedId);
                 }
 
+                String producedId = instance.getDefinition().getProducedIdForConsumed(consumedId);
+
                 addResource(producedId, 1L);
             }
 
@@ -308,7 +292,9 @@ public class FarmData {
             Timestamp newStartTime = new Timestamp(Timestamp.now().getSeconds() - overflowSeconds, 0);
             instance.setLastStart(newStartTime);
         }
-        instance.updateMutableProgress();
+
+        boolean active = findLowestCostOwnedResourceInList(consumedIds, gameDataWrapper, inventory) != null;
+        instance.updateMutableProgress(active);
     }
 
     private void sortConsumers(GameDataWrapper gameDataWrapper) {
@@ -326,14 +312,13 @@ public class FarmData {
         double progressSec = nowMills / 1000D - lastStartSec;
         double durationSec = instance.getDefinition().getDurationMills() / 1000D;
 
+        List<String> consumedIds = instance.getDefinition().getConsumedIds();
+        float valueMultiplier = instance.getDefinition().getValueMultiplier();
+
         long completions = (long) (progressSec / durationSec);
         if (completions > 0) {
-            String[] consumedIds = instance.getDefinition().getConsumedIds();
-            float valueMultiplier = instance.getDefinition().getValueMultiplier();
-
             // Convert the highest cost consumedId to the multiplied Gold value.
-            LiveData<Long> getCount = instance.getCountLive();
-            long maxConvertedCount = (getCount.getValue() == null ? 1L : getCount.getValue()) * completions;
+            long maxConvertedCount = instance.getCount() * completions;
             for (int i = 0; i < maxConvertedCount; i++) {
                 String consumedId = findHighestCostOwnedResourceInList(consumedIds, gameDataWrapper, inventory);
                 if (consumedId == null)
@@ -354,18 +339,19 @@ public class FarmData {
 
             // Reset start time
             long overflowSeconds = (long) (progressSec % durationSec);
-            int overflowNanos = (int) ((progressSec % durationSec) * 1e8);
-            Timestamp newStartTime = new Timestamp(Timestamp.now().getSeconds() - overflowSeconds, overflowNanos);
+            Timestamp newStartTime = new Timestamp(Timestamp.now().getSeconds() - overflowSeconds, 0);
             instance.setLastStart(newStartTime);
         }
-        instance.updateMutableProgress();
+
+        boolean active = findHighestCostOwnedResourceInList(consumedIds, gameDataWrapper, inventory) != null;
+        instance.updateMutableProgress(active);
     }
 
     private Long countOfResourceInInventory(String resourceId) {
         return inventory.getOrDefault(resourceId, 0L);
     }
 
-    private Long countOfResourcesInInventory(String[] resourceIds) {
+    private Long countOfResourcesInInventory(Collection<String> resourceIds) {
         Long total = 0L;
         for (String resourceId : resourceIds) {
             total += countOfResourceInInventory(resourceId);
@@ -377,7 +363,7 @@ public class FarmData {
         return timestamp.getSeconds() * 1000;
     }
 
-    public static String findLowestCostOwnedResourceInList(String[] resourceIds, GameDataWrapper gameDataWrapper, Map<String, Long> inventory) {
+    public static String findLowestCostOwnedResourceInList(Collection<String> resourceIds, GameDataWrapper gameDataWrapper, Map<String, Long> inventory) {
         String currentLowestId = null;
         long currentLowestCost = Long.MAX_VALUE;
         for (String resourceId : resourceIds) {
@@ -392,7 +378,7 @@ public class FarmData {
         return currentLowestId;
     }
 
-    public static String findHighestCostOwnedResourceInList(String[] resourceIds, GameDataWrapper gameDataWrapper, Map<String, Long> inventory) {
+    public static String findHighestCostOwnedResourceInList(Collection<String> resourceIds, GameDataWrapper gameDataWrapper, Map<String, Long> inventory) {
         String currentHighestId = null;
         long currentHighestCost = Long.MIN_VALUE;
         for (String resourceId : resourceIds) {

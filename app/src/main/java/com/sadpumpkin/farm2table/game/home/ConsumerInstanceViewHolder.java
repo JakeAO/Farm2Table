@@ -54,7 +54,12 @@ public class ConsumerInstanceViewHolder extends RecyclerView.ViewHolder {
         _progressBar.setMin(0);
         _progressBar.setMax(100);
         _progressBar.setProgress((int) Math.round(newProgress * 100));
-        _progressBarLabel.setText(String.valueOf(Math.round(newProgress * 100) + "%"));
+        _progressBarLabel.setText(Math.round(newProgress * 100) + "%");
+    }
+
+    public void updateActive(boolean active) {
+        _progressBar.setVisibility(active ? View.VISIBLE : View.INVISIBLE);
+        _progressBarLabel.setVisibility(active ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void updateView(ConsumerInstance instance,
@@ -79,8 +84,8 @@ public class ConsumerInstanceViewHolder extends RecyclerView.ViewHolder {
             Glide.with(itemView)
                     .load(gameDataWrapper.getImageReference(consumedResource.getPath()))
                     .into(_consumedIcon);
-            _consumedIconLabel.setText("x" + String.valueOf(count));
-            _producedIconLabel.setText("x" + String.valueOf(coinOutput));
+            _consumedIconLabel.setText("x" + count);
+            _producedIconLabel.setText("x" + coinOutput);
             _consumedIcon.setVisibility(View.VISIBLE);
             _consumedIconLabel.setVisibility(View.VISIBLE);
         }

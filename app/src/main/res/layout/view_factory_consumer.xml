@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="75dp">
+    android:layout_height="55dp">
 
     <ImageView
         android:id="@+id/background"
@@ -14,35 +14,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ui_banner_wood" />
+        app:srcCompat="@drawable/ui_panel_tab_active" />
 
     <TextView
         android:id="@+id/titleLabel"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="35dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="20dp"
         android:fontFamily="@font/quicksand_medium"
         android:text="TextView"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/producedIcon"
+        app:layout_constraintStart_toEndOf="@+id/consumedIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/consumedIcon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="5dp"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="7dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ui_graphic_coin" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_dummy_resource" />
 
     <TextView
         android:id="@+id/consumedIconLabel"
@@ -55,7 +57,7 @@
         android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/consumedIcon"
-        app:layout_constraintEnd_toEndOf="@+id/consumedIcon"
+        app:layout_constraintEnd_toStartOf="@+id/progressBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/consumedIcon"
         app:layout_constraintVertical_bias="1.0" />
@@ -65,12 +67,12 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="10dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/producedIcon"
+        app:layout_constraintStart_toEndOf="@+id/consumedIcon" />
 
     <TextView
         android:id="@+id/progressBarLabel"
@@ -89,9 +91,9 @@
         android:id="@+id/producedIcon"
         android:layout_width="50dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="7dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -105,8 +107,8 @@
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:fontFamily="@font/quicksand_medium"
-        android:text="x5"
-        android:textAlignment="center"
+        android:text="x500"
+        android:textAlignment="textEnd"
         android:textColor="#000000"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/producedIcon"
@@ -114,4 +116,5 @@
         app:layout_constraintStart_toStartOf="@+id/producedIcon"
         app:layout_constraintTop_toTopOf="@+id/producedIcon"
         app:layout_constraintVertical_bias="1.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

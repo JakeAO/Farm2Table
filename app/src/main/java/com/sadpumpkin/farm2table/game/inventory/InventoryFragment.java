@@ -30,7 +30,7 @@ public class InventoryFragment extends BaseFragment {
 
         ResourceAdapter resourceAdapter = new ResourceAdapter(_userData.farm(), _gameData);
 
-        _recyclerView = view.findViewById(R.id.recyclerView);
+        _recyclerView = view.findViewById(R.id.producerListView);
         _recyclerView.setLayoutManager(new LinearLayoutManager(_activity));
         _recyclerView.setHasFixedSize(true);
         _recyclerView.setAdapter(resourceAdapter);

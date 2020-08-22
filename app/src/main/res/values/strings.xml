@@ -32,4 +32,9 @@
     <string name="preference_sign_out">Sign Out</string>
     <string name="preference_sign_out_summary">Sign out of your account and return to the splash screen.</string>
     <string name="preference_account_category">Accounts</string>
+    <string name="label_header_producers">Producers</string>
+    <string name="label_header_converters">Converters</string>
+    <string name="label_header_consumers">Consumers</string>
+    <string name="label_switch_show">Show</string>
+    <string name="label_switch_hide">Hide</string>
 </resources>

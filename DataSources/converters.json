@@ -1,27 +1,30 @@
 [
-    { "id": "conv_bakery_bread", "name": "Bread Bakery", "producedId": "res_bread", "duration": 5000, "cost": 1000, 
-        "consumedId": [
-            "res_wheat",
-            "res_acorn"
-        ] 
+    { "id": "conv_jammery", "name": "Jammery", "duration": 120000, "cost": 2500, 
+        "conversionMap": [
+            "res_apple", "res_jam_apple",
+            "res_cherry", "res_jam_cherry",
+            "res_dragon", "res_jam_dragon",
+            "res_lemon", "res_jam_lemon",
+            "res_pineapple", "res_jam_pineapple",
+            "res_strawberry", "res_jam_strawberry"
+        ]
     },
-    { "id": "conv_cannery_jam", "name": "Jam Cannery", "producedId": "res_jam", "duration": 5000, "cost": 1000, 
-        "consumedId": [
-            "res_blueberries",
-            "res_cherry",
-            "res_cranberries",
-            "res_mango",
-            "res_peach",
-            "res_strawberries",
-            "res_wildBerries"
-        ] 
+    { "id": "conv_pieHouse", "name": "Pie Baker", "duration": 120000, "cost": 2500, 
+        "conversionMap": [
+            "res_apple", "res_pie_apple",
+            "res_cherry", "res_pie_cherry",
+            "res_dragon", "res_pie_dragon",
+            "res_lemon", "res_pie_lemon",
+            "res_peach", "res_pie_peach",
+            "res_pineapple", "res_pie_pineapple",
+            "res_strawberry", "res_pie_strawberry"
+        ]
     },
-    { "id": "conv_vineyard", "name": "Jam Cannery", "producedId": "res_wine", "duration": 15000, "cost": 5000, 
-        "consumedId": [
-            "res_grapesGreen",
-            "res_grapesPurple",
-            "res_grapesRed",
-            "res_grapesWhite"
-        ] 
+    { "id": "conv_tartHouse", "name": "Tart Baker", "duration": 90000, "cost": 10000, 
+        "conversionMap": [
+            "res_jam_dragon", "res_tart_dragon",
+            "res_jam_lemon", "res_tart_lemon",
+            "res_jam_strawberry", "res_tart_strawberry"
+        ]
     }
 ]

@@ -3,7 +3,10 @@ package com.sadpumpkin.farm2table.game.settings;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -16,6 +19,19 @@ import com.sadpumpkin.farm2table.util.UserDataWrapper;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
+    private MainActivity _activity = null;
+    private ViewModelProvider _vmp = null;
+    private FirebaseWrapper _firebase = null;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        _activity = (MainActivity) getActivity();
+        _vmp = new ViewModelProvider((MainActivity) getActivity());
+        _firebase = _vmp.get(FirebaseWrapper.class);
+    }
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
@@ -24,22 +40,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
         if (preference.hasKey() &&
-                preference.getKey().equals("")) {
+                preference.getKey().equals("sign_out")) {
 
-            final MainActivity mainActivity = (MainActivity) getActivity();
-            final ViewModelProvider vmp = new ViewModelProvider(mainActivity);
-            final FirebaseWrapper firebase = vmp.get(FirebaseWrapper.class);
-            final UserDataWrapper userData = vmp.get(UserDataWrapper.class);
+            final UserDataWrapper userData = _vmp.get(UserDataWrapper.class);
 
             new Thread(
                     new AsyncLogout(
                             new Handler(Looper.getMainLooper()),
-                            mainActivity,
-                            firebase,
+                            _activity,
+                            _firebase,
                             userData,
                             () -> {
                                 userData.clear();
-                                mainActivity.getNavController().navigate(R.id.splash_navigation);
+                                _activity.getNavController().navigate(R.id.splash_navigation);
                             })).start();
         }
         return super.onPreferenceTreeClick(preference);

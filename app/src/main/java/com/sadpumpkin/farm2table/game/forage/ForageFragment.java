@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -125,7 +126,7 @@ public class ForageFragment extends BaseFragment {
             }
 
             try {
-                _locationManager.getCurrentLocation(bestProvider, null, _activity.getMainExecutor(), location -> {
+                _locationManager.requestLocationUpdates(bestProvider, 1000, 3, location -> {
                     if (location == null) {
                         getBackupLocation();
                         return;
@@ -134,9 +135,9 @@ public class ForageFragment extends BaseFragment {
                     double lat = location.getLatitude();
                     double lon = location.getLongitude();
 
-                    _location = LatLng.newBuilder().setLatitude(lat).setLongitude(lon).build();
-                    _locationString = String.format(Locale.getDefault(Locale.Category.FORMAT), "%.2f-%.2f", lat, lon);
-                    getFertilityInformation();
+                    onLocationUpdated(
+                            LatLng.newBuilder().setLatitude(lat).setLongitude(lon).build(),
+                            String.format(Locale.getDefault(Locale.Category.FORMAT), "%.2f-%.2f", lat, lon));
                 });
             } catch (SecurityException e) {
                 Log.e("GPS", e.getMessage(), e.getCause());
@@ -178,15 +179,24 @@ public class ForageFragment extends BaseFragment {
         double lat = location.getLatitude();
         double lon = location.getLongitude();
 
-        _location = LatLng.newBuilder().setLatitude(lat).setLongitude(lon).build();
-        _locationString = String.format(Locale.getDefault(Locale.Category.FORMAT), "%.2f-%.2f", lat, lon);
-        getFertilityInformation();
+        onLocationUpdated(
+                LatLng.newBuilder().setLatitude(lat).setLongitude(lon).build(),
+                String.format(Locale.getDefault(Locale.Category.FORMAT), "%.2f-%.2f", lat, lon));
     }
 
     private void getFallbackLocation() {
-        _location = null;
-        _locationString = String.format(Locale.getDefault(Locale.Category.FORMAT), "%.2f-%.2f-%s", 0d, 0d, _userData.user().getUid());
-        getFertilityInformation();
+        onLocationUpdated(
+                null,
+                String.format(Locale.getDefault(Locale.Category.FORMAT), "%.2f-%.2f-%s", 0d, 0d, _userData.user().getUid()));
+    }
+
+    private void onLocationUpdated(LatLng newLatLng, String newLocationString) {
+        if (newLatLng != _location || !newLocationString.equals(_locationString)) {
+            _location = newLatLng;
+            _locationString = newLocationString;
+
+            getFertilityInformation();
+        }
     }
 
     private void getFertilityInformation() {

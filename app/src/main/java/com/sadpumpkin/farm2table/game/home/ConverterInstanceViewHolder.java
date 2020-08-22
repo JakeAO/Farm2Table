@@ -42,19 +42,18 @@ public class ConverterInstanceViewHolder extends RecyclerView.ViewHolder {
                             ConverterDefinition definition,
                             FarmData farmData,
                             GameDataWrapper gameDataWrapper) {
-        ResourceDefinition producedResource = gameDataWrapper.getResourceDefinition(definition.getProducedId());
-
-        _nameLabel.setText(definition.getName());
-        Glide.with(itemView)
-                .load(gameDataWrapper.getImageReference(producedResource.getPath()))
-                .into(_producedIcon);
 
         updateView(instance, definition, farmData, gameDataWrapper);
     }
 
     public void updateProgress(Double newProgress) {
         _progressBar.setProgress((int) Math.round(newProgress * 100));
-        _progressBarLabel.setText(String.valueOf(Math.round(newProgress * 100) + "%"));
+        _progressBarLabel.setText(Math.round(newProgress * 100) + "%");
+    }
+
+    public void updateActive(boolean active) {
+        _progressBar.setVisibility(active ? View.VISIBLE : View.INVISIBLE);
+        _progressBarLabel.setVisibility(active ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void updateView(ConverterInstance instance,
@@ -67,20 +66,29 @@ public class ConverterInstanceViewHolder extends RecyclerView.ViewHolder {
                 definition.getConsumedIds(),
                 gameDataWrapper,
                 farmData.getInventoryLive().getValue());
-        ResourceDefinition consumedResource = gameDataWrapper.getResourceDefinition(consumedResourceId);
+        String producedResourceId = definition.getProducedIdForConsumed(consumedResourceId);
 
-        if (consumedResource == null) {
-            _consumedIcon.setVisibility(View.INVISIBLE);
-            _consumedIconLabel.setVisibility(View.INVISIBLE);
-            _producedIconLabel.setText("?");
+        ResourceDefinition consumedResource = gameDataWrapper.getResourceDefinition(consumedResourceId);
+        ResourceDefinition producedResource = gameDataWrapper.getResourceDefinition(producedResourceId);
+
+        _nameLabel.setText(definition.getName());
+        _consumedIconLabel.setText("x" + count);
+        _producedIconLabel.setText("x" + count);
+
+        if (consumedResource == null || producedResource == null) {
+            Glide.with(itemView)
+                    .load(R.drawable.ic_dummy_resource)
+                    .into(_consumedIcon);
+            Glide.with(itemView)
+                    .load(R.drawable.ic_dummy_resource)
+                    .into(_producedIcon);
         } else {
             Glide.with(itemView)
                     .load(gameDataWrapper.getImageReference(consumedResource.getPath()))
                     .into(_consumedIcon);
-            _consumedIconLabel.setText("x" + String.valueOf(count));
-            _producedIconLabel.setText("x" + String.valueOf(count));
-            _consumedIcon.setVisibility(View.VISIBLE);
-            _consumedIconLabel.setVisibility(View.VISIBLE);
+            Glide.with(itemView)
+                    .load(gameDataWrapper.getImageReference(producedResource.getPath()))
+                    .into(_producedIcon);
         }
     }
 }
